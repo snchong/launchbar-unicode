@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>CFBundleIdentifier</key>
+    <string>snchong.launchbar-unicode</string>
+    <key>CFBundleIconFile</key>
+    <string>font-awesome:fa-keyboard-o</string>
+    <key>CFBundleName</key>
+    <string>Unicode</string>
+    <key>CFBundleVersion</key>
+    <string>1.0</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>10.10</string>
+    <key>LBAbbreviation</key>
+    <string>symbol</string>
+    <key>LBDescription</key>
+    <dict>
+      <key>LBArgument</key>
+      <string>Search string for Unicode character. Characters can be searched by name, description, hex code, or decimal code.</string>
+      <key>LBSummary</key>
+      <string>This action allows the user to insert unicode characters by searching by name, description, etc.</string>
+      <key>LBAuthor</key>
+      <string>Stephen Chong</string>
+      <key>LBWebsiteURL</key>
+      <string>https://github.com/snchong/launchbar-unicode</string>
+    </dict>
+    <key>LBScripts</key>
+    <dict>
+      <key>LBDefaultScript</key>
+      <dict>
+	<key>LBScriptName</key>
+	<string>default.js</string>
+	<key>LBKeepWindowActive</key>
+	<true/>
+	<key>LBResultType</key>
+	<string>unknown</string>
+	<key>LBReturnsResult</key>
+	<true/>
+      </dict>
+    </dict>
+    <key>NSHumanReadableCopyright</key>
+    <string>Copyright © 2020 Stephen Chong.</string>
+  </dict>
+</plist>
