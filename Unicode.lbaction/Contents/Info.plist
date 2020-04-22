@@ -9,7 +9,7 @@
     <key>CFBundleName</key>
     <string>Unicode</string>
     <key>CFBundleVersion</key>
-    <string>1.0.1</string>
+    <string>1.0.2</string>
     <key>LSMinimumSystemVersion</key>
     <string>10.10</string>
     <key>LBAbbreviation</key>
@@ -29,7 +29,7 @@
       <key>LBDownloadURL</key>
       <string>https://www.dropbox.com/s/cx0rlhyma4i7irn/Unicode.lbaction?dl=1</string>
       <key>LBChangelog</key>
-      <string>1.0.2: Support for action update.</string>
+      <string>1.0.2: Support for LaTeX.</string>
     </dict>
     <key>LBScripts</key>
     <dict>
