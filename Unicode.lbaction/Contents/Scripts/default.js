@@ -11,14 +11,8 @@ var char_category_file = "/Contents/Resources/Categories.json";
 var all_items_file = "/Contents/Resources/all.json";
 var data_file_dir = "/Contents/Resources/";
 
-function filename_from_cat_chain(chain) {
-    var s = Action.path + data_file_dir + "cat";
-    for (var i = 0; i < chain.length; i++) {
-	s += "-";	
-	s += chain[i].replace(/[\W]+/g,"_");
-    }
-    
-    return s+".json";
+function filename_from_cat_id(cat_id) {
+    return Action.path + data_file_dir + "cat-" + cat_id + ".json";
 }
 
 function loadAllItems() {
@@ -34,15 +28,15 @@ function loadAllItems() {
     return File.readJSON(datafile);    
 }
 
-function loadCategoryData(chain) {
-    var datafile = filename_from_cat_chain(chain);
+function loadCategoryData(cat_id) {
+    var datafile = filename_from_cat_id(cat_id);
 
     if (!File.exists(datafile)) {
 	createDatafiles();
     }
 
     if (!File.exists(datafile)) {
-	LaunchBar.alert("Could not create data files");
+	LaunchBar.alert("Could not create data files; could not find " + datafile);
 	return;
     }
     return File.readJSON(datafile);
@@ -50,13 +44,19 @@ function loadCategoryData(chain) {
 
 
 
+
 function createDatafiles() {
     LaunchBar.log("Creating data files from " + char_category_file);
     var chardata = File.readJSON(Action.path+char_category_file);
 
-
+    function cat_num_to_string(n) {
+	return n.toString(36);
+    }
+    
+    var cat_count = 1;
+    
     var all_items = [];
-    var top_category = { chain : [], items : [], categories : {} };
+    var top_category = { chain : [], id:"0", items : [], categories : {} };
     for (var ind = 0; ind < chardata.length; ind++) {
 	var ch = chardata[ind];
 	var curr_cat = top_category;
@@ -76,6 +76,7 @@ function createDatafiles() {
 	    // Otherwise, we navigate down one level
 	    if (!(cat in curr_cat.categories)) {
 		// category is not yet a child of curr_cat
+		var cat_id = cat_num_to_string(cat_count++);
 
 		var newchain = curr_cat.chain.slice();
 		newchain.push(cat);
@@ -86,12 +87,13 @@ function createDatafiles() {
 		    icon: "Category.icns",
 		    actionReturnsItems: true,
 		    action: "runWithItem",
-		    actionArgument: {chain:newchain},
+		    actionArgument: {id:cat_id},
 		};
 		all_items.push(c);
 		curr_cat.items.push(c);
 		curr_cat.categories[cat] = {
 		    chain : newchain,
+		    id:cat_id,
 		    items : [],
 		    categories : {},
 		}
@@ -131,7 +133,7 @@ function createDatafiles() {
     function visitCats(cat) {
 	cat.items.sort(sort_fn);
 
-	var filename = filename_from_cat_chain(cat.chain);
+	var filename = filename_from_cat_id(cat.id);
 
 	LaunchBar.log("Writing file " + filename);
 	File.writeJSON(cat.items, filename, {prettyPrint: false});
@@ -186,16 +188,16 @@ function charEntry(ch, chain) {
 }
 
 function runWithItem(arg) {
-    return loadCategoryData(arg.chain);
+    return loadCategoryData(arg.id);
 }
-function run() {    
-    return loadCategoryData({chain:[]});
+function run() {
+    return loadCategoryData("0"); // cat id of the top category
 }
 function runWithString(s) {    
     // filter all
     s = s.toUpperCase();
     return loadAllItems().filter(function (e) {
-	return (e.title.search(s) >= 0 || (e.hasOwnProperty("subtitle") && (e.subtitle.toUpperCase().search(s) >= 0)));
+	return (e.title.toUpperCase().search(s) >= 0 || (e.hasOwnProperty("subtitle") && (e.subtitle.toUpperCase().search(s) >= 0)));
     });
 }
 
