@@ -17,9 +17,9 @@
     <key>LBDescription</key>
     <dict>
       <key>LBArgument</key>
-      <string>Search string for Unicode character. Characters can be searched by name, description, hex code, or decimal code.</string>
+      <string>Search string for Unicode character. Characters can be searched by name, hex code, or decimal code.</string>
       <key>LBSummary</key>
-      <string>This action allows the user to insert unicode characters by searching by name, description, etc.</string>
+      <string>This action allows the user to search for and insert Unicode characters. Pass a string argument to the action to search by name, hex code or decimal. With no argument, the action allows browsing Unicode characters by category. </string>
       <key>LBAuthor</key>
       <string>Stephen Chong</string>
       <key>LBWebsiteURL</key>
@@ -37,6 +37,13 @@
 	<string>unknown</string>
 	<key>LBReturnsResult</key>
 	<true/>
+	<key>LBAllowsInstantReuseOfLastTextInputString</key>
+	<true/>
+	<key>LBAcceptedArgumentTypes</key>
+	<array>
+	  <string>string</string>
+	</array>
+	
       </dict>
     </dict>
     <key>NSHumanReadableCopyright</key>
