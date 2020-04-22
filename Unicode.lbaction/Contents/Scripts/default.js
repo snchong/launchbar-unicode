@@ -154,9 +154,14 @@ function charEntry(ch, chain) {
     var character = String.fromCodePoint(decimal);
     var iconIdentifier = "character:" + character;
     var unicode = "U+" + ch.code;
-    return {
+    var subt = "Unicode " + unicode +"; decimal " + decimal;
+    if (ch.hasOwnProperty("latex")) {
+	subt += "; LaTeX " + ch.latex;
+    }
+
+    var ret = {
         title: ch.name,
-        subtitle: "Unicode " + unicode +"; decimal " + decimal,
+        subtitle: subt,
         label: unicode,
         icon: iconIdentifier,
 	action: "pasteChar",
@@ -167,6 +172,14 @@ function charEntry(ch, chain) {
                 label: "Character",
             },
             {
+                title: ch.gc,
+                label: "Category",
+            },
+            {
+                title: chain.join(" ▷ "),
+                label: "Category",
+            },
+            {
                 title: unicode,
                 label: "Unicode",
             },
@@ -174,17 +187,21 @@ function charEntry(ch, chain) {
                 title: decimal.toString(),
                 label: "Decimal",
             },
-            {
-                title: chain.join(" ▷ "),
-                label: "Category",
-            },
-            {
-                title: "Paste character",
-		action: "pasteChar",
-		actionArgument: character,
-            },
         ],
     };
+
+    if (ch.hasOwnProperty("latex")) {
+	ret.children.push({ title: ch.latex, label:"LaTeX"});
+	ret['latex'] = ch.latex;
+    }
+
+    ret.children.push({
+        title: "Paste character",
+	action: "pasteChar",
+	actionArgument: character,
+    });
+    
+    return ret
 }
 
 function runWithItem(arg) {
@@ -195,10 +212,17 @@ function run() {
 }
 function runWithString(s) {    
     // filter all
-    s = s.toUpperCase();
-    return loadAllItems().filter(function (e) {
-	return (e.title.toUpperCase().search(s) >= 0 || (e.hasOwnProperty("subtitle") && (e.subtitle.toUpperCase().search(s) >= 0)));
+    sup = s.toUpperCase();
+    var res = loadAllItems().filter(function (e) {
+	return e.title.toUpperCase().search(sup) >= 0 ||
+	    (e.hasOwnProperty("subtitle") && (e.subtitle.toUpperCase().search(sup) >= 0));
     });
+
+    if (res.length == 0) {
+	return [{title: "No results 😒"}];
+    }
+
+    return res;
 }
 
 
