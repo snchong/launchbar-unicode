@@ -27,7 +27,7 @@
       <key>LBUpdateURL</key>
       <string>https://raw.githubusercontent.com/snchong/launchbar-unicode/latest-release/Unicode.lbaction/Contents/Info.plist</string>
       <key>LBDownloadURL</key>
-      <string>https://www.dropbox.com/s/ju8at46rbxeh7d9/Unicode.lbaction?dl=1</string>/
+      <string>https://www.dropbox.com/s/ju8at46rbxeh7d9/Unicode.lbaction?dl=1</string>
       <key>LBChangelog</key>
       <string>1.0.1: Support for action update.</string>
     </dict>
