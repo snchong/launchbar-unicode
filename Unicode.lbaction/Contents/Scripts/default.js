@@ -196,6 +196,11 @@ function charEntry(ch, chain) {
     }
 
     ret.children.push({
+        title: "Display character",
+	action: "displayChar",
+	actionArgument: {name:ch.name, c:character},
+    });
+    ret.children.push({
         title: "Paste character",
 	action: "pasteChar",
 	actionArgument: character,
@@ -232,3 +237,14 @@ function runWithString(s) {
 function pasteChar(c) {
     LaunchBar.paste(c);
 }
+
+/*
+ * Paste the character c
+ */
+function displayChar(c) {
+    LaunchBar.displayInLargeType({
+	title: c.name,
+	string: c.c,
+    });
+}
+
