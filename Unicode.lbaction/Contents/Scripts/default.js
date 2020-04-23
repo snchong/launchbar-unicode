@@ -10,6 +10,7 @@
 var char_category_file = "/Contents/Resources/Categories.json";
 var all_items_file = "/Contents/Resources/all.json";
 var data_file_dir = "/Contents/Resources/";
+var ucc_str = "Unicode Character Category";
 
 function filename_from_cat_id(cat_id) {
     return Action.path + data_file_dir + "cat-" + cat_id + ".json";
@@ -56,7 +57,7 @@ function createDatafiles() {
     var cat_count = 1;
     
     var all_items = [];
-    var top_category = { chain : [], id:"0", items : [], categories : {} };
+    var top_category = { chain : [], id:"0", items : [], categories : {}, item_count : 0};
     for (var ind = 0; ind < chardata.length; ind++) {
 	var ch = chardata[ind];
 	var curr_cat = top_category;
@@ -70,6 +71,7 @@ function createDatafiles() {
 		var e = charEntry(ch,curr_cat.chain);
 		all_items.push(e);
 		curr_cat.items.push(e);
+		curr_cat.item_count++;
 		break;		
 	    }
 	    
@@ -83,7 +85,7 @@ function createDatafiles() {
 
 		var c = {
 		    title: cat,
-		    label: "Category",
+		    label: ucc_str,
 		    icon: "Category.icns",
 		    actionReturnsItems: true,
 		    action: "runWithItem",
@@ -96,7 +98,9 @@ function createDatafiles() {
 		    id:cat_id,
 		    items : [],
 		    categories : {},
-		}
+		    item_count : 0,
+		    entry : c,
+		};
 	    }
 	    curr_cat = curr_cat.categories[cat];
 	}
@@ -107,13 +111,13 @@ function createDatafiles() {
         var l1 = a.label;
         var l2 = b.label;
 	// Categories go first
-	if (l1 == "Category" && l2 != "Category") {
+	if (l1.startsWith(ucc_str) && !l2.startsWith(ucc_str)) {
 	    return -1;
 	}
-	if (l2 == "Category" && l1 != "Category") {
+	if (l2.startsWith(ucc_str) && !l1.startsWith(ucc_str)) {
 	    return 1;
 	}
-	if (l1 == "Category") {
+	if (l1.startsWith(ucc_str)) {
 	    // Sort categories by title
             var t1 = a.title;
             var t2 = b.title;
@@ -131,16 +135,25 @@ function createDatafiles() {
     
     // Now write the files
     function visitCats(cat) {
+	var count = cat.item_count;
+	
+	// depth first visit
+	for (subcat in cat.categories) {
+	    count += visitCats(cat.categories[subcat]);
+	}
+
 	cat.items.sort(sort_fn);
 
+	if (cat.hasOwnProperty("entry")) {
+	    cat.entry.label = ucc_str + " (" + count + " items)";
+	}
+	
 	var filename = filename_from_cat_id(cat.id);
 
 	LaunchBar.log("Writing file " + filename);
 	File.writeJSON(cat.items, filename, {prettyPrint: false});
-	
-	for (subcat in cat.categories) {
-	    visitCats(cat.categories[subcat]);
-	}
+
+	return count;
     }
 
     visitCats(top_category);
@@ -173,11 +186,11 @@ function charEntry(ch, chain) {
             },
             {
                 title: ch.gc,
-                label: "Category",
+                label: ucc_str,
             },
             {
                 title: chain.join(" ▷ "),
-                label: "Category",
+                label: ucc_str,
             },
             {
                 title: unicode,
