@@ -9,7 +9,7 @@
     <key>CFBundleName</key>
     <string>Unicode</string>
     <key>CFBundleVersion</key>
-    <string>1.0.2</string>
+    <string>1.1.0</string>
     <key>LSMinimumSystemVersion</key>
     <string>10.10</string>
     <key>LBAbbreviation</key>
@@ -27,9 +27,9 @@
       <key>LBUpdateURL</key>
       <string>https://raw.githubusercontent.com/snchong/launchbar-unicode/latest-release/Unicode.lbaction/Contents/Info.plist</string>
       <key>LBDownloadURL</key>
-      <string>https://www.dropbox.com/s/cx0rlhyma4i7irn/Unicode.lbaction?dl=1</string>
+      <string>https://www.dropbox.com/s/il0987bhg5uwfsc/Unicode.lbaction?dl=1</string>
       <key>LBChangelog</key>
-      <string>1.0.2: Support for LaTeX.</string>
+      <string>1.1.0: Support for live suggestions.</string>
     </dict>
     <key>LBScripts</key>
     <dict>
@@ -49,7 +49,14 @@
 	<array>
 	  <string>string</string>
 	</array>
-	
+      </dict>
+      
+      <key>LBSuggestionsScript</key>
+      <dict>
+	<key>LBScriptName</key>
+	<string>default.js</string>
+	<key>LBRunInBackground</key>
+	<true/>
       </dict>
     </dict>
     <key>NSHumanReadableCopyright</key>

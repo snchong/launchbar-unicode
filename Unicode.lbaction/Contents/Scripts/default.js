@@ -20,11 +20,11 @@ function loadAllItems() {
     var datafile = Action.path + all_items_file;
     if (!File.exists(datafile)) {
 	createDatafiles();
-    }
 
-    if (!File.exists(datafile)) {
-	LaunchBar.alert("Could not create data files");
-	return;
+	if (!File.exists(datafile)) {
+	    LaunchBar.alert("Could not create data files");
+	    return;
+	}
     }
     return File.readJSON(datafile);    
 }
@@ -34,11 +34,11 @@ function loadCategoryData(cat_id) {
 
     if (!File.exists(datafile)) {
 	createDatafiles();
-    }
 
-    if (!File.exists(datafile)) {
-	LaunchBar.alert("Could not create data files; could not find " + datafile);
-	return;
+	if (!File.exists(datafile)) {
+	    LaunchBar.alert("Could not create data files; could not find " + datafile);
+	    return;
+	}
     }
     return File.readJSON(datafile);
 }
@@ -85,6 +85,7 @@ function createDatafiles() {
 
 		var c = {
 		    title: cat,
+                    subtitle: newchain.length > 1 ? newchain.join(" ▷ ") : "",
 		    label: ucc_str,
 		    icon: "Category.icns",
 		    actionReturnsItems: true,
@@ -228,15 +229,29 @@ function runWithItem(arg) {
 function run() {
     return loadCategoryData("0"); // cat id of the top category
 }
-function runWithString(s) {    
-    // filter all
+function runWithString(s) {
+    if (Action.scriptType == "suggestions") {
+	if (s.length == 1) {
+	    // Allow 1-character searches only for the actual character
+	    return loadAllItems().filter(function (e) {
+		return e.actionArgument == s;
+	    });
+	}
+	else if (s.length < 3) {
+	    // only search for longish strings
+	    return [];
+	}
+    }
+	
+    // filter all    
     sup = s.toUpperCase();
     var res = loadAllItems().filter(function (e) {
 	return e.title.toUpperCase().search(sup) >= 0 ||
-	    (e.hasOwnProperty("subtitle") && (e.subtitle.toUpperCase().search(sup) >= 0));
+	    (e.hasOwnProperty("subtitle") && (e.subtitle.toUpperCase().search(sup) >= 0)) ||
+	    e.actionArgument == s;
     });
 
-    if (res.length == 0) {
+    if (res.length == 0 && Action.scriptType != "suggestions") {	
 	return [{title: "No results 😒"}];
     }
 
